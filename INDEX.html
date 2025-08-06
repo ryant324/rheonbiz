@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CABA Server - Pawn Shop Network</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster:wght@400&family=Metal+Mania:wght@400&family=Butcherman:wght@400&family=Eater:wght@400&family=Chonburi:wght@400&family=Rubik+Glitch:wght@400&family=Bungee:wght@400&family=Orbitron:wght@400;500;600;700;800;900&family=Audiowide:wght@400&family=Black+Ops+One:wght@400&family=Jolly+Lodger:wght@400&family=Cinzel:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #f8f8f8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .main-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(107, 207, 127, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(77, 157, 224, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 20% 90%, rgba(187, 107, 217, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 217, 61, 0.2) 0%, transparent 60%),
+                linear-gradient(135deg, #000000 0%, #0a0505 25%, #050a05 50%, #05050a 75%, #000000 100%);
+            z-index: -2;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 0.8; }
+            33% { opacity: 0.9; }
+            67% { opacity: 1; }
+        }
+
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* DIRECTORY STYLES */
+        .directory-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-family: 'Butcherman', cursive;
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            text-shadow: 
+                0 0 20px rgba(220, 20, 60, 1),
+                0 0 40px rgba(220, 20, 60, 0.8),
+                0 0 60px rgba(220, 20, 60, 0.6),
+                4px 4px 0px #8b0000,
+                8px 8px 0px #000000;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            animation: blazingFire 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes blazingFire {
+            0% { 
+                text-shadow: 
+                    0 0 20px rgba(220, 20, 60, 1),
+                    0 0 40px rgba(220, 20, 60, 0.8),
+                    0 0 60px rgba(220, 20, 60, 0.6),
+                    4px 4px 0px #8b0000,
+                    8px 8px 0px #000000;
+            }
+            100% { 
+                text-shadow: 
+                    0 0 30px rgba(255, 69, 0, 1),
+                    0 0 50px rgba(255, 69, 0, 0.8),
+                    0 0 70px rgba(255, 69, 0, 0.6),
+                    4px 4px 0px #8b0000,
+                    8px 8px 0px #000000;
+            }
+        }
+
+        .subtitle {
+            font-family: 'Metal Mania', cursive;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 4rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            text-shadow: 
+                0 0 15px rgba(0, 100, 255, 1),
+                0 0 25px rgba(0, 100, 255, 0.7),
+                3px 3px 0px #000080,
+                6px 6px 0px #000000;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1600px;
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+
+        .character-card {
+            border: 3px solid #8b0000;
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            backdrop-filter: blur(20px) saturate(1.8);
+            overflow: hidden;
+            box-shadow: 
+                0 0 30px rgba(139, 0, 0, 0.7),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .character-card.rheon {
+            background: 
+                radial-gradient(circle at 50% 20%, rgba(220, 20, 60, 0.4) 0%, transparent 70%),
+                radial-gradient(circle at 50% 80%, rgba(139, 0, 0, 0.6) 0%, transparent 70%),
+                linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(139, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.9) 100%);
+            border-color: #dc143c;
+            box-shadow: 
+                0 0 40px rgba(220, 20, 60, 0.8),
+                inset 0 0 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .character-card.rekah {
+            background: 
+                radial-gradient(circle at 50% 20%, rgba(0, 100, 255, 0.4) 0%, transparent 70%),
+                radial-gradient(circle at 50% 80%, rgba(0, 0, 139, 0.6) 0%, transparent 70%),
+                linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 139, 0.3) 50%, rgba(0, 0, 0, 0.9) 100%);
+            border-color: #0064ff;
+            box-shadow: 
+                0 0 40px rgba(0, 100, 255, 0.8),
+                inset 0 0 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .character-card.captain {
+            background: 
+                conic-gradient(from 45deg at 50% 50%, 
+                    rgba(220, 20, 60, 0.4) 0deg,
+                    rgba(0, 100, 255, 0.4) 120deg,
+                    rgba(139, 0, 0, 0.4) 240deg,
+                    rgba(220, 20, 60, 0.4) 360deg
+                ),
+                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.95) 70%);
+            border-color: #ff6600;
+            animation: captainRotate 8s linear infinite;
+            box-shadow: 
+                0 0 40px rgba(255, 102, 0, 0.8),
+                inset 0 0 40px rgba(0, 0, 0, 0.9);
+        }
+
+        @keyframes captainRotate {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .character-card.trees {
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(0, 0, 0, 0.9) 0px,
+                    rgba(0, 0, 0, 0.9) 30px,
+                    rgba(0, 100, 0, 0.3) 30px,
+                    rgba(0, 100, 0, 0.3) 60px,
+                    rgba(139, 69, 19, 0.3) 60px,
+                    rgba(139, 69, 19, 0.3) 90px
+                );
+            border-color: #228b22;
+            box-shadow: 
+                0 0 40px rgba(34, 139, 34, 0.8),
+                inset 0 0 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .character-card.shades {
+            background: 
+                linear-gradient(
+                    45deg,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(75, 0, 130, 0.4) 25%,
+                    rgba(0, 0, 0, 1) 50%,
+                    rgba(139, 0, 139, 0.4) 75%,
+                    rgba(0, 0, 0, 1) 100%
+                ),
+                radial-gradient(circle at 30% 70%, rgba(138, 43, 226, 0.3) 0%, transparent 50%);
+            background-size: 60px 60px, 100% 100%;
+            animation: shadowSlide 6s ease-in-out infinite;
+            border-color: #9400d3;
+            box-shadow: 
+                0 0 40px rgba(148, 0, 211, 0.8),
+                inset 0 0 40px rgba(0, 0, 0, 0.9);
+        }
+
+        @keyframes shadowSlide {
+            0%, 100% { background-position: 0% 0%, 50% 50%; }
+            50% { background-position: 60px 60px, 30% 70%; }
+        }
+
+        @keyframes planetRotate {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        @keyframes shadowMove {
+            0%, 100% { background-position: 0% 0%, 50% 50%; }
+            50% { background-position: 40px 40px, 30% 70%; }
+        }
+
+        .character-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .character-image.rheon-special {
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(220, 38, 38, 0.8) 0%, transparent 70%),
+                radial-gradient(circle at 50% 70%, rgba(255, 215, 0, 0.6) 0%, transparent 70%),
+                linear-gradient(135deg, #8B4513 0%, #CD853F 50%, #8B4513 100%);
+            border: 3px solid #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+                border-color: #ff6b6b;
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 107, 107, 0.8);
+                border-color: #ff8e53;
+            }
+        }
+
+        .now-open-banner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .open-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 0.5rem;
+            font-family: 'Cinzel', serif;
+        }
+
+        .click-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffd93d;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-family: 'Cinzel', serif;
+        }
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            font-style: italic;
+            transition: all 0.5s ease;
+        }
+
+        .character-name {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .character-card.rheon .character-name {
+            color: #ff6b6b;
+        }
+
+        .character-card.rekah .character-name {
+            color: #10b981;
+        }
+
+        .character-card.captain .character-name {
+            color: #60a5fa;
+        }
+
+        .character-card.trees .character-name {
+            color: #22c55e;
+        }
+
+        .character-card.shades .character-name {
+            color: #a855f7;
+        }
+
+        .character-desc {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+        }
+
+        .character-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            backdrop-filter: blur(10px);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .status-open {
+            background: rgba(0, 0, 0, 0.8);
+            color: #10b981;
+            border: 2px solid #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .status-coming {
+            background: rgba(0, 0, 0, 0.8);
+            color: #f59e0b;
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .directory-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .copyright-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* RHEON ENTRANCE STYLES */
+        .rheon-entrance-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .entrance-logo {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 600;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 25%, #6bcf7f 50%, #4d9de0 75%, #bb6bd9 100%);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(107, 207, 127, 0.7)); }
+            100% { filter: drop-shadow(0 0 60px rgba(187, 107, 217, 0.8)); }
+        }
+
+        .entrance-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(153, 27, 27, 0.5) 100%);
+            border: 2px solid rgba(220, 38, 38, 0.7);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            max-width: 800px;
+            backdrop-filter: blur(20px) saturate(1.5);
+            box-shadow: 
+                0 20px 60px rgba(220, 38, 38, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: warningPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { 
+                border-color: rgba(220, 38, 38, 0.7);
+                box-shadow: 0 20px 60px rgba(220, 38, 38, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            50% { 
+                border-color: rgba(220, 38, 38, 1);
+                box-shadow: 0 30px 80px rgba(220, 38, 38, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .warning-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            text-shadow: 0 2px 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .warning-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 1.5rem;
+        }
+
+        .disclaimer-box {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.7) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            max-width: 700px;
+            backdrop-filter: blur(15px);
+        }
+
+        .disclaimer-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+        }
+
+        .enter-button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4d9de0 50%, #bb6bd9 100%);
+            background-size: 200% 200%;
+            border: none;
+            color: #ffffff;
+            padding: 20px 60px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            font-family: 'Cinzel', serif;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            animation: buttonGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes buttonGlow {
+            0% { 
+                background-position: 0% 50%;
+                box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            }
+            100% { 
+                background-position: 100% 50%;
+                box-shadow: 0 15px 40px rgba(187, 107, 217, 0.5);
+            }
+        }
+
+        .enter-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 107, 107, 0.6);
+        }
+
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .enter-button:hover::before {
+            left: 100%;
+        }
+
+        .completion-story {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.8));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            backdrop-filter: blur(15px);
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .story-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .shop-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .gallery-image {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.4), rgba(20, 20, 20, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-image:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .gallery-image .image-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.8), rgba(153, 27, 27, 0.9));
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .header {
+            position: relative;
+            padding: 6rem 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.9) 0%, rgba(30, 30, 30, 0.7) 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 600;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .server-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.4), rgba(168, 85, 247, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .security-notice {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(153, 27, 27, 0.3));
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            margin: 3rem auto;
+            max-width: 800px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .security-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #fca5a5;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .security-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .navigation {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 2rem 3rem;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(30px) saturate(1.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-nav {
+            display: flex;
+            background: rgba(25, 25, 25, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-btn:hover {
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+            position: relative;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .item-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.4), rgba(20, 20, 20, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px) saturate(1.2);
+        }
+
+        .item-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .item-layout {
+            display: flex;
+            min-height: 280px;
+        }
+
+        .item-image-container {
+            width: 240px;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        .item-details {
+            flex: 1;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-stats {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+        }
+
+        .contact-button {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            align-self: flex-start;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.8));
+            text-align: center;
+            padding: 4rem 3rem;
+            margin-top: 6rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .character-grid {
+                grid-template-columns: 1fr;
+            }
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            .item-layout {
+                flex-direction: column;
+            }
+            .item-image-container {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-background"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- DIRECTORY PAGE -->
+    <div class="page active" id="directoryPage">
+        <div class="directory-container">
+            <h1 class="main-title">CABA Server</h1>
+            <p class="subtitle">Pawn Shop Network</p>
+            
+            <div class="character-grid">
+                <div class="character-card rheon" onclick="goToRheonShop()">
+                    <div class="character-image rheon-special">
+                        <div class="now-open-banner">
+                            <div class="open-text">NOW OPEN!</div>
+                            <div class="click-text">CLICK HERE!!</div>
+                        </div>
+                    </div>
+                    <h2 class="character-name">Rheon</h2>
+                    <p class="character-desc">
+                        Master weaponsmith and proprietor of premium armaments. Specializes in high-end magical weapons and rare artifacts.
+                    </p>
+                    <span class="character-status status-open">● OPEN FOR BUSINESS</span>
+                </div>
+                
+                <div class="character-card rekah" onclick="comingSoon('Rekah')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Rekah</h2>
+                    <p class="character-desc">
+                        Armor specialist and defensive equipment expert. Known for the finest protection gear in all of CABA.
+                    </p>
+                    <span class="character-status status-coming">● COMING SOON</span>
+                </div>
+                
+                <div class="character-card captain" onclick="comingSoon('Captain Planet')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Captain Planet</h2>
+                    <p class="character-desc">
+                        Elemental weapons dealer and environmental gear trader. By your powers combined, he is Captain Planet!
+                    </p>
+                    <span class="character-status status-coming">● COMING SOON</span>
+                </div>
+                
+                <div class="character-card trees" onclick="comingSoon('Trees')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Trees</h2>
+                    <p class="character-desc">
+                        Nature's merchant dealing in organic materials, wooden weapons, and druidic accessories.
+                    </p>
+                    <span class="character-status status-coming">● COMING SOON</span>
+                </div>
+                
+                <div class="character-card shades" onclick="comingSoon('Shades')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Shades</h2>
+                    <p class="character-desc">
+                        Shadow broker dealing in rare items, mysterious artifacts, and things that go bump in the night.
+                    </p>
+                    <span class="character-status status-coming">● COMING SOON</span>
+                </div>
+            </div>
+            
+            <div class="directory-footer">
+                <p class="footer-text">⚠️ ⚠️ For Educational Purposes Only, Screenshots are from the CABA server virtual video game world ⚠️ ⚠️</p>
+                <p class="copyright-text">&copy; 2025 Vordak | All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RHEON SHOP PAGE -->
+    <div class="page" id="rheonShopPage">
+        <!-- RHEON ENTRANCE SCREEN -->
+        <div class="rheon-entrance" id="rheonEntrance">
+            <div class="rheon-entrance-container">
+                <h1 class="entrance-logo">RHEON'S PAWN SHOP</h1>
+                <p class="entrance-subtitle">CABA Server • Premium Virtual Armory</p>
+                
+                <div class="warning-box">
+                    <div class="warning-title">⚠️ HEAVILY GUARDED ESTABLISHMENT ⚠️</div>
+                    <div class="warning-text">
+                        <strong>This pawn shop is under the protection of elite guards Elleon and Rheon.</strong>
+                        <br><br>
+                        All transactions are conducted under the supervision of professional security personnel 
+                        operating under the authority of <strong>Jacey Lynn, Young Monarch</strong>.
+                        <br><br>
+                        Entry constitutes acknowledgment of shop security protocols and procedures.
+                        Unauthorized access attempts will be met with immediate response.
+                    </div>
+                </div>
+                
+                <div class="disclaimer-box">
+                    <div class="disclaimer-text">
+                        <strong>EDUCATIONAL DISCLAIMER:</strong> This virtual pawn shop interface is created for educational and 
+                        demonstration purposes only. All item statistics, pricing, and game mechanics shown are part of an educational 
+                        showcase of virtual world economics and user interface design principles.
+                    </div>
+                </div>
+                
+                <div class="copyright-text">
+                    &copy; 2025 Vordak | All Rights Reserved
+                </div>
+                
+                <button class="enter-button" onclick="enterRheonShop()">
+                    ENTER THE SHOP
+                </button>
+            </div>
+        </div>
+
+        <!-- RHEON MAIN SHOP -->
+        <div class="rheon-shop" id="rheonMainShop" style="display: none;">
+            <button class="back-button" onclick="goBackToDirectory()">← Back to Directory</button>
+
+            <header class="header">
+                <div class="header-content">
+                    <div class="server-badge">CABA Server</div>
+                    <h1>Rheon's Pawn Shop</h1>
+                    <p>Premium Virtual Items & Equipment</p>
+                    
+                    <div class="security-notice">
+                        <div class="security-title">🛡️ Heavily Guarded Establishment</div>
+                        <div class="security-text">
+                            This pawn shop is under the protection of elite guards Elleon and Rheon, 
+                            ensuring the safety and security of all transactions and inventory.
+                            <br><br>
+                            <strong>Under the patronage of Jacey Lynn, Young Monarch</strong><br>
+                            All operations supervised by experienced leadership
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="completion-story">
+                <div class="story-title">Grand Opening Complete</div>
+                <div class="story-text">
+                    After countless nights of dedication and only a couple hours of sleep each night, 
+                    the finishing touches were finally completed at 5:00 AM on August 6th, 2025. 
+                    Rheon's Pawn Shop is now officially open for business.
+                </div>
+                
+                <div class="shop-gallery">
+                    <div class="gallery-image">
+                        <div class="image-placeholder">Shop Interior Screenshot<br>Elite Guards Elleon & Rheon<br>Protecting the Establishment</div>
+                    </div>
+                    <div class="gallery-image">
+                        <div class="image-placeholder">Royal Chamber Screenshot<br>Jacey Lynn - Young Monarch<br>Overseeing Operations</div>
+                    </div>
+                    <div class="gallery-image">
+                        <div class="image-placeholder">Lightning Crossbow<br>Detailed View<br>Available for Purchase</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="navigation">
+                <div class="nav-container">
+                    <div class="category-nav">
+                        <button class="nav-btn active" onclick="showSection('weapons')">Weapons</button>
+                        <button class="nav-btn" onclick="showSection('armor')">Armor</button>
+                        <button class="nav-btn" onclick="showSection('salvage')">Salvage</button>
+                        <button class="nav-btn" onclick="showSection('misc')">Miscellaneous</button>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="container">
+                <section id="weapons" class="section active">
+                    <h2 class="section-title">Weapons</h2>
+                    <div id="weapons-grid" class="items-grid"></div>
+                </section>
+
+                <section id="armor" class="section">
+                    <h2 class="section-title">Armor</h2>
+                    <div id="armor-grid" class="items-grid"></div>
+                </section>
+
+                <section id="salvage" class="section">
+                    <h2 class="section-title">Salvage</h2>
+                    <div id="salvage-grid" class="items-grid"></div>
+                </section>
+
+                <section id="misc" class="section">
+                    <h2 class="section-title">Miscellaneous</h2>
+                    <div id="misc-grid" class="items-grid"></div>
+                </section>
+            </main>
+
+            <footer class="footer">
+                <p class="footer-text">&copy; 2025 Rheon | San Antonio, Texas, USA</p>
+                <p class="footer-text">Contact shop owner for item availability and secure transactions</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Complete item database
+        const items = {
+            weapons: [
+                {
+                    name: "Lightning Rend Xbow",
+                    stats: "Iron Electric Crossbow<br>Price: $500 Sends<br>Damage: Electrical + Lightning Rending<br>Wield Req: 375 Missile Weapons<br>Value: 6,071 • Burden: 1,347<br><br>★ Flawless (7) Workmanship<br>★ +167% Damage Modifier<br>★ Elemental Damage Bonus: 16 Electrical<br>★ Imbued with Lightning Rending Property<br>★ Enhanced with multiple spell effects"
+                },
+                {
+                    name: "Acid Rend Warhammer", 
+                    stats: "Ivory Acid Lugian Hammer<br>Price: $500 Sends<br>Damage: 0.69-69 Acid + Acid Rending<br>Wield Req: 420 Heavy Weapons<br>Value: 10,671 • Burden: 333<br><br>★ Magnificent (5) Workmanship<br>★ +16% Attack Skill Bonus<br>★ +14.0% Melee Defense Bonus<br>★ Imbued with Acid Rending Property<br>★ Set with 4 Emeralds enhancement"
+                },
+                {
+                    name: "Bronze Great Star Mace",
+                    stats: "Two Handed Combat Weapon<br>Price: $50 Sends<br>Damage: 6-10 Bludgeoning<br>Speed: Average (45)<br>Value: 422 • Burden: 550<br><br>★ Finely Crafted (5) Workmanship<br>★ +2% Bonus to Attack Skill<br>★ Cleave: 2 enemies in front arc<br>★ Enhanced with 1 Tiger Eye"
+                },
+                {
+                    name: "Bronze Lightning Spadone",
+                    stats: "Two Handed Combat Weapon<br>Price: $50 Sends<br>Damage: 8-16 Slashing + Electrical<br>Speed: Average (45)<br>Value: 989 • Burden
