@@ -1,0 +1,1297 @@
+                    <button class="back-button" onclick="goBackToDirectory()">← Back to Directory</button>
+
+                    <header class="header">
+                        <div class="header-content">
+                            <div class="server-badge">Fantasy RPG</div>
+                            <h1 style="color: ${shop.colors.primary}">${shop.title}</h1>
+                            <p>${shop.subtitle}</p>
+                            
+                            <div class="security-notice">
+                                <div class="security-title">🛡️ Premium Establishment</div>
+                                <div class="security-text">
+                                    ${shop.motto}
+                                    <br><br>
+                                    <strong>Designed by Vordak 2025 | For Educational Purposes Only</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <nav class="navigation">
+                        <div class="nav-container">
+                            <div class="category-nav">
+                                <button class="nav-btn active" onclick="showShopSection('${shopName}', 'weapons')">Weapons</button>
+                                <button class="nav-btn" onclick="showShopSection('${shopName}', 'armor')">Armor</button>
+                                <button class="nav-btn" onclick="showShopSection('${shopName}', 'salvage')">Salvage</button>
+                                <button class="nav-btn" onclick="showShopSection('${shopName}', 'misc')">Miscellaneous</button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main class="container">
+                        <section id="${shopName}-weapons" class="section active">
+                            <h2 class="section-title">Weapons</h2>
+                            <div id="${shopName}-weapons-grid" class="items-grid"></div>
+                        </section>
+
+                        <section id="${shopName}-armor" class="section">
+                            <h2 class="section-title">Armor</h2>
+                            <div id="${shopName}-armor-grid" class="items-grid"></div>
+                        </section>
+
+                        <section id="${shopName}-salvage" class="section">
+                            <h2 class="section-title">Salvage</h2>
+                            <div id="${shopName}-salvage-grid" class="items-grid"></div>
+                        </section>
+
+                        <section id="${shopName}-misc" class="section">
+                            <h2 class="section-title">Miscellaneous</h2>
+                            <div id="${shopName}-misc-grid" class="items-grid"></div>
+                        </section>
+                    </main>
+
+                    <footer class="footer">
+                        <p class="footer-text">Designed by Vordak 2025 | For Educational Purposes Only</p>
+                        <p class="footer-text">Contact shop owner for item availability and secure transactions</p>
+                    </footer>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', shopHTML);
+            populateShopItems(shopName);
+        }
+
+        function showShopSection(shopName, sectionName) {
+            // Update nav buttons
+            const shopPage = document.getElementById(`${shopName}ShopPage`);
+            const navButtons = shopPage.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide sections
+            const sections = shopPage.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(`${shopName}-${sectionName}`).classList.add('active');
+        }
+
+        function populateShopItems(shopName) {
+            const shopItems = itemDatabase[shopName];
+            if (!shopItems) return;
+
+            // Populate each category
+            ['weapons', 'armor', 'salvage', 'misc'].forEach(category => {
+                const grid = document.getElementById(`${shopName}-${category}-grid`);
+                if (grid && shopItems[category]) {
+                    grid.innerHTML = shopItems[category].map(item => `
+                        <div class="item-card">
+                            <div class="item-layout">
+                                <div class="item-image-container">
+                                    Screenshot<br>Coming Soon
+                                </div>
+                                <div class="item-details">
+                                    <h3 class="item-name">${item.name}</h3>
+                                    <div class="item-stats">${item.stats}</div>
+                                    <button class="contact-button" onclick="contactShopOwner('${item.name}', '${shopName}')">
+                                        Contact for Purchase
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+
+        function contactShopOwner(itemName, shopName) {
+            const shopOwners = {
+                rheon: "Rheon",
+                rekah: "Rekah", 
+                captainplanet: "Captain Planet",
+                trees: "Trees",
+                shades: "Shades"
+            };
+            
+            alert(`Contact ${shopOwners[shopName]} regarding: ${itemName}\n\nThis item is available for purchase. Please reach out for transaction details.`);
+        }
+
+        function goBackToDirectory() {
+            // Hide all shop pages
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            
+            // Remove shop pages
+            document.querySelectorAll('.shop-page').forEach(page => page.remove());
+            
+            // Show directory
+            document.getElementById('directoryPage').classList.add('active');
+        }
+    </script>
+</body>
+</html> High-end salvage<br>☆ Damage enhancement<br>☆ Armor cleaving"
+                    },
+                    {
+                        name: "Pyreal Ingot",
+                        stats: "Price: 25,000p | Atlan weapon forging | Multiple applications<br><br>☆ Legendary metal<br>☆ Atlan forging<br>☆ Premium crafting"
+                    }
+                ],
+                misc: [
+                    {
+                        name: "Exquisite Bone Handle",
+                        stats: "Price: 5,500p | Composite weapon upgrade | 360+ requirement<br><br>☆ Weapon component<br>☆ High skill requirement<br>☆ Premium upgrade"
+                    },
+                    {
+                        name: "Weapon Stand (Ornate)",
+                        stats: "Price: 3,200p | Housing decoration | Weapon display<br><br>☆ Decorative stand<br>☆ Weapon showcase<br>☆ Ornate design"
+                    },
+                    {
+                        name: "Master Tinkering Kit",
+                        stats: "Price: 8,750p | +15% success chance | 250 uses<br><br>☆ Professional tool<br>☆ Enhanced success rate<br>☆ Multiple uses"
+                    },
+                    {
+                        name: "Salvaging Ust (Masterwork)",
+                        stats: "Price: 6,400p | +25% salvage yield | 500 uses<br><br>☆ Masterwork tool<br>☆ Improved salvage yield<br>☆ Extended durability"
+                    }
+                ]
+            },
+            rekah: {
+                weapons: [
+                    {
+                        name: "Defender Sword",
+                        stats: "Price: 4,500p | 12-20 damage | +15% Melee Defense<br>Aura of Defender VI | 325 Heavy Weapons<br><br>☆ Defensive specialist weapon<br>☆ Melee defense bonus<br>☆ Protective aura"
+                    },
+                    {
+                        name: "Guardian's Mace",
+                        stats: "Price: 3,800p | 18-24 damage | +12% Melee Defense<br>Invulnerability Self V | 300 Heavy Weapons<br><br>☆ Guardian weapon<br>☆ Defensive enhancement<br>☆ Invulnerability spell"
+                    },
+                    {
+                        name: "Assault Crossbow",
+                        stats: "Price: 5,000p | +6% Melee Defense bonus<br>Blood Drinker IV | 250 Missile Weapons<br><br>☆ Defensive crossbow<br>☆ Life draining<br>☆ Combat protection"
+                    },
+                    {
+                        name: "Noble Crossbow",
+                        stats: "Price: 6,000p | +22% Melee Defense<br>Crushing Blow, Biting Strike | 290 Missile Weapons<br><br>☆ Noble craftsmanship<br>☆ Superior defense<br>☆ Critical capabilities"
+                    },
+                    {
+                        name: "Protective Crystal Orb",
+                        stats: "Price: 7,200p | +10% mana conversion<br>Magic Resistance Self VI | 350 War Magic<br><br>☆ Magical protection<br>☆ Mana efficiency<br>☆ Magic resistance"
+                    },
+                    {
+                        name: "Ward Wand of Defense",
+                        stats: "Price: 5,500p | +8% mana conversion<br>Armor Self VI | 280 War Magic<br><br>☆ Defensive magic focus<br>☆ Armor enhancement<br>☆ Protective ward"
+                    }
+                ],
+                armor: [
+                    {
+                        name: "Covenant Helm",
+                        stats: "AL 485, Unenchantable | Greater Olthoi Brood Queen Helm (AL 450)<br><br>☆ Covenant series helm<br>☆ Unenchantable protection<br>☆ Premium defense"
+                    },
+                    {
+                        name: "Covenant Breastplate",
+                        stats: "AL 509, Lugian craftsmanship | Ancient Armored Vestment (AL 420)<br><br>☆ Covenant chest armor<br>☆ Lugian quality<br>☆ Ancient design"
+                    },
+                    {
+                        name: "Covenant Greaves",
+                        stats: "AL 465, intricate inlays | Olthoi Koujia Leggings (AL 425)<br><br>☆ Covenant leg armor<br>☆ Intricate craftsmanship<br>☆ Enhanced protection"
+                    },
+                    {
+                        name: "Covenant Pauldrons",
+                        stats: "AL 440, full mobility | Covenant Bracers (AL 420)<br><br>☆ Covenant arm armor<br>☆ Full mobility<br>☆ Combat flexibility"
+                    },
+                    {
+                        name: "Covenant Sollerets",
+                        stats: "AL 398, enhanced agility | Ancient Armored Long Boots (AL 365)<br><br>☆ Covenant foot armor<br>☆ Enhanced agility<br>☆ Ancient styling"
+                    },
+                    {
+                        name: "Tower Shield",
+                        stats: "AL 180, +18 AC, full body cover | Large Kite Shield (AL 165, +15 AC)<br><br>☆ Maximum coverage<br>☆ Full body protection<br>☆ Superior defense"
+                    }
+                ],
+                salvage: [
+                    {
+                        name: "Steel Salvage (WM 9.5)",
+                        stats: "Price: 2,500p | +20 AL enhancement | 65% success rate<br><br>☆ High-grade steel<br>☆ Armor enhancement<br>☆ Reliable success"
+                    },
+                    {
+                        name: "Bronze Salvage (WM 8.2)",
+                        stats: "Price: 1,800p | +0.2 armor protection | Elemental resistance<br><br>☆ Bronze material<br>☆ Elemental protection<br>☆ Armor enhancement"
+                    },
+                    {
+                        name: "Alabaster Salvage (WM 7.8)",
+                        stats: "Price: 2,200p | +0.4 piercing protection | Anti-piercing specialist<br><br>☆ Alabaster material<br>☆ Piercing resistance<br>☆ Specialized protection"
+                    },
+                    {
+                        name: "Armoredillo Hide (WM 8.5)",
+                        stats: "Price: 3,200p | +0.4 slashing protection | Natural material<br><br>☆ Natural armor<br>☆ Slashing resistance<br>☆ Organic protection"
+                    }
+                ],
+                misc: [
+                    {
+                        name: "Armor Tailoring Kit",
+                        stats: "Price: 250,000p | Appearance modification | Single use<br><br>☆ Appearance customization<br>☆ Single application<br>☆ Premium service"
+                    },
+                    {
+                        name: "Major Item Tinkering Armature",
+                        stats: "Price: 5,000p | Precision tool | Advanced modifications<br><br>☆ Professional armature<br>☆ Advanced tinkering<br>☆ Precision work"
+                    },
+                    {
+                        name: "Armor Upgrade Kit",
+                        stats: "Price: 15,000p | Quest armor enhancement | Single use<br><br>☆ Armor enhancement<br>☆ Quest gear upgrade<br>☆ Single application"
+                    },
+                    {
+                        name: "Salvage Bag (Empty)",
+                        stats: "Price: 100p | 100-unit capacity | Essential for crafters<br><br>☆ Storage solution<br>☆ Large capacity<br>☆ Crafter essential"
+                    }
+                ]
+            },
+            captainplanet: {
+                weapons: [
+                    {
+                        name: "Enhanced Flaming Isparian Dagger",
+                        stats: "Price: 8,000p | 30.25-55 fire damage | 400 Finesse<br>Frost Elemental Slayer | Attuned, Bonded<br><br>☆ Fire elemental weapon<br>☆ Frost slayer<br>☆ Enhanced Isparian craft"
+                    },
+                    {
+                        name: "Flaming Weeping Sword",
+                        stats: "Price: 8,000p | 36.6-61 fire damage | Very Fast (5)<br>Heart of the Innocent | Bael'Zharon's Hate<br><br>☆ Legendary flame blade<br>☆ Very fast attacks<br>☆ Heart of Innocent"
+                    },
+                    {
+                        name: "Shadowfire Isparian Crossbow",
+                        stats: "Price: 10,000p | +13 fire damage | 160% modifier<br>Shadow Slayer | Crushing Blow, Biting Strike<br><br>☆ Shadow slaying<br>☆ Fire enhancement<br>☆ Critical capabilities"
+                    },
+                    {
+                        name: "Blackfire Dissolving Isparian Crossbow",
+                        stats: "Price: 8,000p | Lightning damage | Lightning Elemental Slayer<br>Armor Cleaving<br><br>☆ Lightning elemental<br>☆ Armor piercing<br>☆ Elemental slayer"
+                    },
+                    {
+                        name: "Major Flaming Isparian Wand",
+                        stats: "Price: 8,000p | +21% fire spell damage | 310 War Magic<br>Fiery Blessing | Frost Elemental Slayer<br><br>☆ Fire spell enhancement<br>☆ Fiery blessing<br>☆ Elemental mastery"
+                    },
+                    {
+                        name: "Fire Spear",
+                        stats: "Price: 1,200p | 12.4-31 fire damage<br>Fire Protection Other V | Blood Drinker V | Ancient weapon<br><br>☆ Fire protection<br>☆ Life draining<br>☆ Ancient weapon"
+                    }
+                ],
+                armor: [
+                    {
+                        name: "Ice Heaume of Frore",
+                        stats: "Unparalleled fire/cold resistance | Ancient Armored Gauntlets (Enhanced acid)<br><br>☆ Legendary ice helm<br>☆ Fire/cold immunity<br>☆ Ancient artifact"
+                    },
+                    {
+                        name: "Shadow Bracers",
+                        stats: "Superior all elemental resistance | Blackfire Shadow Gauntlets (Unparalleled acid)<br><br>☆ All elemental protection<br>☆ Shadow enhancement<br>☆ Superior resistance"
+                    },
+                    {
+                        name: "Ancient Armored Bracers",
+                        stats: "Enhanced acid resistance | Platemail Gauntlets (Below-average elemental)<br><br>☆ Acid resistance<br>☆ Ancient craftsmanship<br>☆ Enhanced protection"
+                    },
+                    {
+                        name: "Hieromancer's Gauntlets",
+                        stats: "Enhanced fire/acid | Perfect Light Bracers (Light-based properties)<br><br>☆ Fire/acid enhancement<br>☆ Hieromancer craft<br>☆ Light properties"
+                    },
+                    {
+                        name: "Ancient Armored Gauntlets Lv40",
+                        stats: "Enhanced acid | Flaming Weeping Claw (Fire unarmed weapon)<br><br>☆ Enhanced acid protection<br>☆ Level 40 variant<br>☆ Ancient armor"
+                    },
+                    {
+                        name: "Enhanced Shimmering Isparian",
+                        stats: "Elemental Slayer | Perfect Shimmering Bow (Elemental protection)<br><br>☆ Elemental slaying<br>☆ Shimmering enhancement<br>☆ Perfect craftsmanship"
+                    }
+                ],
+                salvage: [
+                    {
+                        name: "Fire Opal Salvage",
+                        stats: "Variable | Crippling Blow imbue | 33.33% success rate<br><br>☆ Fire elemental<br>☆ Crippling enhancement<br>☆ Rare material"
+                    },
+                    {
+                        name: "Aquamarine Salvage",
+                        stats: "Variable | Cold rending enhancement | Ice-associated<br><br>☆ Cold enhancement<br>☆ Ice properties<br>☆ Rending capability"
+                    },
+                    {
+                        name: "Jet Salvage",
+                        stats: "Variable | Lightning rending enhancement | Electric-associated<br><br>☆ Lightning enhancement<br>☆ Electric properties<br>☆ Rending power"
+                    },
+                    {
+                        name: "Fire Opal Foolproof",
+                        stats: "Rare #174 | Guaranteed Crippling Blow | 100% success<br><br>☆ Guaranteed success<br>☆ Crippling blow<br>☆ Rare material"
+                    },
+                    {
+                        name: "Jet Foolproof",
+                        stats: "Rare #182 | Guaranteed Lightning Rending | 100% success<br><br>☆ Guaranteed lightning<br>☆ Perfect success<br>☆ Premium material"
+                    },
+                    {
+                        name: "Sunstone Foolproof",
+                        stats: "Rare #175 | Guaranteed Armor Rending | 100% success<br><br>☆ Armor rending<br>☆ Perfect application<br>☆ Sunstone power"
+                    }
+                ],
+                misc: [
+                    {
+                        name: "Fire Opal Gem",
+                        stats: "Fire-themed gem | Inherent fire properties<br><br>☆ Fire essence<br>☆ Gem quality<br>☆ Elemental power"
+                    },
+                    {
+                        name: "Scintillating Gem",
+                        stats: "Shadow armor currency | Required for elemental sets<br><br>☆ Shadow currency<br>☆ Elemental crafting<br>☆ Specialized gem"
+                    },
+                    {
+                        name: "Black Spear Ice Totem",
+                        stats: "Ice totem quest | 79M XP reward<br><br>☆ Quest item<br>☆ Ice totem<br>☆ High XP reward"
+                    },
+                    {
+                        name: "Flaming Throwing Axe",
+                        stats: "25p | 9-12 fire damage | Stack of 100<br><br>☆ Throwing weapon<br>☆ Fire damage<br>☆ Stackable"
+                    },
+                    {
+                        name: "Flaming Skull",
+                        stats: "1p | 10-25 fire damage | Supernatural flame<br><br>☆ Skull weapon<br>☆ Supernatural fire<br>☆ Unique item"
+                    },
+                    {
+                        name: "Major Elemental Atlan Stones",
+                        stats: "Shivering (cold), Smoldering (fire), Sparking (lightning), Stinging (acid)<br><br>☆ Elemental stones<br>☆ Atlan enhancement<br>☆ All elements"
+                    }
+                ]
+            },
+            trees: {
+                weapons: [
+                    {
+                        name: "Club",
+                        stats: "Price: 260p | 5-10 bludgeoning | Basic wooden weapon<br>Light Weapons<br><br>☆ Simple wooden club<br>☆ Basic weapon<br>☆ Natural material"
+                    },
+                    {
+                        name: "Staff of the Nomads",
+                        stats: "Quest item | Desert wood | Nomad inscription<br>Spiritual connection<br><br>☆ Quest reward<br>☆ Nomadic heritage<br>☆ Desert craftsmanship"
+                    },
+                    {
+                        name: "Composite Bow",
+                        stats: "Price: 8,000-12,000p | Wood Heart from Wood Golems<br>Horn and sinew construction<br><br>☆ Composite construction<br>☆ Wood Golem materials<br>☆ Superior archery"
+                    },
+                    {
+                        name: "Elari Wood Bow",
+                        stats: "Price: 6,000-10,000p | Rare Elari wood<br>Natural flexibility<br><br>☆ Rare Elari wood<br>☆ Natural flexibility<br>☆ Premium archery"
+                    },
+                    {
+                        name: "Oak Staff",
+                        stats: "Price: 2,000-4,000p | Sturdy oak construction<br>Nature mage favorite<br><br>☆ Oak construction<br>☆ Nature magic focus<br>☆ Druidic preference"
+                    },
+                    {
+                        name: "Quarter Staff",
+                        stats: "Price: 300-800p | Basic wooden staff<br>Combat and spellcasting<br><br>☆ Versatile weapon<br>☆ Combat/magic hybrid<br>☆ Traditional design"
+                    }
+                ],
+                armor: [
+                    {
+                        name: "Leather Cap",
+                        stats: "AL 15-25 | Leather Cowl (AL 18-28, head/neck)<br><br>☆ Natural leather<br>☆ Basic protection<br>☆ Comfortable fit"
+                    },
+                    {
+                        name: "Leather Breastplate",
+                        stats: "AL 35-55 | Leather Cuirass (AL 40-60)<br><br>☆ Leather chest armor<br>☆ Flexible protection<br>☆ Natural material"
+                    },
+                    {
+                        name: "Leather Leggings",
+                        stats: "AL 30-50 | Leather Tassets (AL 25-40)<br><br>☆ Leg protection<br>☆ Flexible leather<br>☆ Natural defense"
+                    },
+                    {
+                        name: "Leather Bracers",
+                        stats: "AL 20-35 | Leather Sleeves (AL 25-40)<br><br>☆ Arm protection<br>☆ Natural leather<br>☆ Flexible design"
+                    },
+                    {
+                        name: "Leather Boots",
+                        stats: "AL 18-30, dyeable | Leather Greaves (AL 22-35)<br><br>☆ Foot protection<br>☆ Dyeable leather<br>☆ Comfortable wear"
+                    },
+                    {
+                        name: "Buckler",
+                        stats: "AL 10, wooden | Round Shield (AL 25-40, traditional wood)<br><br>☆ Wooden construction<br>☆ Light shield<br>☆ Traditional design"
+                    }
+                ],
+                salvage: [
+                    {
+                        name: "Leather Salvage",
+                        stats: "Variable | \"Retained\" property | Cannot be salvaged/sold<br><br>☆ Natural leather<br>☆ Retained property<br>☆ Limited availability"
+                    },
+                    {
+                        name: "Linen Salvage",
+                        stats: "Variable | -25% burden reduction | Item tinkering<br><br>☆ Burden reduction<br>☆ Textile material<br>☆ Weight optimization"
+                    },
+                    {
+                        name: "Pine Salvage",
+                        stats: "Variable | -25% value reduction | Wood material<br><br>☆ Pine wood<br>☆ Value modification<br>☆ Wood crafting"
+                    },
+                    {
+                        name: "Teak Salvage",
+                        stats: "Variable | Changes race requirement to Aluvian | Premium wood<br><br>☆ Premium teak<br>☆ Race modification<br>☆ High-quality wood"
+                    },
+                    {
+                        name: "Wood Heart",
+                        stats: "Price: 500-1,500p | Wood Golem component<br>Composite weapon crafting<br><br>☆ Golem component<br>☆ Weapon crafting<br>☆ Rare material"
+                    }
+                ],
+                misc: [
+                    {
+                        name: "Crossbow Stock",
+                        stats: "Quest item | Wooden crossbow component<br>Trade Wood Heart to Barnar<br><br>☆ Crossbow component<br>☆ Quest material<br>☆ Wood crafting"
+                    },
+                    {
+                        name: "Splintered Staff",
+                        stats: "Quest item | Broken staff half<br>Combines for Staff of the Nomads<br><br>☆ Quest component<br>☆ Broken artifact<br>☆ Combination item"
+                    },
+                    {
+                        name: "Mattekar Hide Coat",
+                        stats: "Price: 800-1,500p | AL 45-65 | Organic Mattekar hide<br><br>☆ Mattekar hide<br>☆ Organic armor<br>☆ Natural protection"
+                    },
+                    {
+                        name: "Gromnie Hide Shirt",
+                        stats: "Price: 600-1,200p | AL 35-55 | Scaled Gromnie hide<br><br>☆ Gromnie hide<br>☆ Scaled armor<br>☆ Natural material"
+                    }
+                ]
+            },
+            shades: {
+                weapons: [
+                    {
+                        name: "Damaged Shadow Blade",
+                        stats: "Price: 50p | Weapon tailoring applier<br>Shadow appearance | Tou-Tou ruins relic<br><br>☆ Shadow appearance<br>☆ Weapon modification<br>☆ Ancient relic"
+                    },
+                    {
+                        name: "Shadowfire Sword of Lost Light",
+                        stats: "High tier | Shadowfire infusion<br>Epic Heavy Weapon Aptitude | 2000 mana<br><br>☆ Lost light sword<br>☆ Shadowfire power<br>☆ Epic aptitude"
+                    },
+                    {
+                        name: "Soul Bound Crossbow",
+                        stats: "Spectral weapon | Ghostly blue appearance<br>Bonded to soul | Hummel the Smith<br><br>☆ Soul bound weapon<br>☆ Spectral appearance<br>☆ Smith creation"
+                    },
+                    {
+                        name: "Blighted Crossbow",
+                        stats: "Major Crossbow Aptitude | Bael'Zharon's Hate<br>Expires in 3 days | Murderous Thirst<br><br>☆ Blighted power<br>☆ Temporary weapon<br>☆ Murderous thirst"
+                    },
+                    {
+                        name: "Nether Society Orb",
+                        stats: "+10% vs monsters | 355 Void Magic<br>Legendary Hermetic Link | Void school specialization<br><br>☆ Void magic mastery<br>☆ Monster bonus<br>☆ Legendary focus"
+                    },
+                    {
+                        name: "Foci of Shadow",
+                        stats: "Void magic focus | Allows all void spells<br>Uses scarabs/prismatic tapers<br><br>☆ Complete void focus<br>☆ All void spells<br>☆ Scarab/taper use"
+                    }
+                ],
+                armor: [
+                    {
+                        name: "Shadow Helm Darkened Mind",
+                        stats: "AL 552 | Major Shadow Helm Shivering (AL 500, cold specialization)<br><br>☆ Darkened mind<br>☆ Shadow enhancement<br>☆ Mental protection"
+                    },
+                    {
+                        name: "Shadow Breastplate Shrouded Soul",
+                        stats: "AL 552 | Blackfire Shadow Breastplate (AL 1060 fire)<br><br>☆ Shrouded soul<br>☆ Shadow protection<br>☆ Fire resistance"
+                    },
+                    {
+                        name: "Shadow Greaves Clouded Spirit",
+                        stats: "AL 552 | Prismatic Shadow Greaves (AL 1200 elemental)<br><br>☆ Clouded spirit<br>☆ Shadow enhancement<br>☆ Elemental protection"
+                    },
+                    {
+                        name: "Shadow Gauntlets Darkened Mind",
+                        stats: "AL 552 | Major Shadow Bracers Sparking (AL 1000 electric)<br><br>☆ Darkened mind<br>☆ Shadow gauntlets<br>☆ Electric resistance"
+                    },
+                    {
+                        name: "Shadow Sollerets Shrouded Soul",
+                        stats: "AL 552 | Blackfire Shadow Sollerets (AL 1060 acid)<br><br>☆ Shrouded soul<br>☆ Shadow enhancement<br>☆ Acid protection"
+                    },
+                    {
+                        name: "Shadow Tassets Darkened Mind",
+                        stats: "AL 552 | Prismatic Shadow Tassets (AL 1200 ultimate)<br><br>☆ Darkened mind<br>☆ Shadow protection<br>☆ Ultimate defense"
+                    }
+                ],
+                salvage: [
+                    {
+                        name: "Black Garnet Foolproof",
+                        stats: "Rare material | Priceless workmanship<br>Guaranteed imbue success<br><br>☆ Black garnet<br>☆ Guaranteed success<br>☆ Priceless quality"
+                    },
+                    {
+                        name: "Strange Purple Crystal",
+                        stats: "The Shadows dungeon | Mysterious void properties<br><br>☆ Shadow dungeon<br>☆ Void properties<br>☆ Mysterious crystal"
+                    },
+                    {
+                        name: "Scintillating Gem",
+                        stats: "Shadow armor currency | Need 9 for full suit<br>Fused crystal/shadow<br><br>☆ Shadow currency<br>☆ Armor crafting<br>☆ Crystal fusion"
+                    },
+                    {
+                        name: "Major Shivering Stone",
+                        stats: "Shadow armor upgrade | Cold specialization<br>Removable with Stone Tool<br><br>☆ Cold specialization<br>☆ Armor upgrade<br>☆ Removable enhancement"
+                    }
+                ],
+                misc: [
+                    {
+                        name: "Void Crystal",
+                        stats: "100M XP reward | Master Malsivir drop<br>Unsettling texture | 13-day timer<br><br>☆ Massive XP reward<br>☆ Master drop<br>☆ Timed item"
+                    },
+                    {
+                        name: "Ancient Falatacot Trinket",
+                        stats: "Blood activation | Up to 249M XP gambling<br>Makes skin crawl<br><br>☆ Blood activation<br>☆ XP gambling<br>☆ Falatacot origin"
+                    },
+                    {
+                        name: "Dark Shard",
+                        stats: "1.5M XP | Level 160 Void Knight<br>Loot Tier 6 | Pure shadow essence<br><br>☆ Void Knight loot<br>☆ Shadow essence<br>☆ High tier drop"
+                    },
+                    {
+                        name: "Ruined Amulet of the Void",
+                        stats: "5,000 XP | Shadow creature drop<br>Residual void magic<br><br>☆ Shadow drop<br>☆ Void magic<br>☆ Ruined artifact"
+                    },
+                    {
+                        name: "Black Fire Atlan Stone",
+                        stats: "Major to Blackfire upgrade<br>Unparalleled resistance enhancement<br><br>☆ Blackfire upgrade<br>☆ Atlan stone<br>☆ Resistance boost"
+                    },
+                    {
+                        name: "Prismatic Glyph",
+                        stats: "Ultimate shadow upgrade<br>Uniform Shimmering Shadows set | Maximum bonuses<br><br>☆ Ultimate upgrade<br>☆ Shadow set<br>☆ Maximum power"
+                    }
+                ]
+            }
+        };
+
+        // Navigation functions
+        function goToShop(shopName) {
+            // Hide directory
+            document.getElementById('directoryPage').classList.remove('active');
+            
+            // Create and show shop page
+            createShopPage(shopName);
+        }
+
+        function createShopPage(shopName) {
+            const shopData = {
+                rheon: {
+                    title: "Rheon's Weaponsmith",
+                    subtitle: "Premium Weaponsmith Specialist",
+                    motto: "When excellence is required, only the finest will do.",
+                    colors: { primary: "#ff6b6b", secondary: "#ffd93d" }
+                },
+                rekah: {
+                    title: "Rekah's Armor Emporium",
+                    subtitle: "Armor & Defense Specialist",
+                    motto: "Every piece tested in combat. Every salvage bag verified for purity. Your survival is our reputation.",
+                    colors: { primary: "#10b981", secondary: "#6bcf7f" }
+                },
+                captainplanet: {
+                    title: "Captain Planet's Elemental Arsenal",
+                    subtitle: "Elemental Specialist",
+                    motto: "Harness the power of fire, ice, lightning, and acid",
+                    colors: { primary: "#60a5fa", secondary: "#4d9de0" }
+                },
+                trees: {
+                    title: "Trees' Natural Goods",
+                    subtitle: "Nature & Organic Specialist", 
+                    motto: "From the forest floor to your armory - natural protection and wooden might",
+                    colors: { primary: "#22c55e", secondary: "#10b981" }
+                },
+                shades: {
+                    title: "Shades' Shadow Market",
+                    subtitle: "Dark Magic & Shadow Specialist",
+                    motto: "Welcome to SHADES - Where the darkness serves the light... for a price.",
+                    colors: { primary: "#a855f7", secondary: "#bb6bd9" }
+                }
+            };
+
+            const shop = shopData[shopName];
+            
+            // Remove any existing shop pages
+            const existingShops = document.querySelectorAll('.shop-page');
+            existingShops.forEach(page => page.remove());
+            
+            const shopHTML = `
+                <div class="page active shop-page" id="${shopName}ShopPage">
+                    <button class="back-button" onclick="<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Pawn Shop Network</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Cinzel:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #f8f8f8;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .main-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(107, 207, 127, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(77, 157, 224, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 20% 90%, rgba(187, 107, 217, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 217, 61, 0.2) 0%, transparent 60%),
+                linear-gradient(135deg, #000000 0%, #0a0505 25%, #050a05 50%, #05050a 75%, #000000 100%);
+            z-index: -2;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 0.8; }
+            33% { opacity: 0.9; }
+            67% { opacity: 1; }
+        }
+
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* DIRECTORY STYLES */
+        .directory-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d9de0, #bb6bd9);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 8s ease-in-out infinite;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 50% 0%; }
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            margin-bottom: 4rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1600px;
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+
+        .character-card {
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            backdrop-filter: blur(20px) saturate(1.5);
+            overflow: hidden;
+        }
+
+        .character-card.rheon {
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(220, 38, 38, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(153, 27, 27, 0.6) 0%, transparent 50%),
+                linear-gradient(135deg, #000000 0%, #1a0000 30%, #330000 70%, #000000 100%);
+            color: #ffffff;
+        }
+
+        .character-card.rekah {
+            background: 
+                radial-gradient(circle at 70% 30%, rgba(34, 197, 94, 0.7) 0%, transparent 50%),
+                radial-gradient(circle at 20% 70%, rgba(6, 182, 212, 0.6) 0%, transparent 50%),
+                linear-gradient(135deg, #000000 0%, #001a0a 30%, #00331a 70%, #000000 100%);
+            color: #ffffff;
+        }
+
+        .character-card.captain {
+            background: 
+                conic-gradient(from 45deg at 50% 50%, #1e40af 0deg, #059669 90deg, #dc2626 180deg, #7c2d12 270deg, #1e40af 360deg),
+                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.7) 30%, rgba(0, 0, 0, 0.9) 70%);
+            color: #ffffff;
+            animation: planetRotate 10s linear infinite;
+        }
+
+        .character-card.trees {
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    #000000 0px,
+                    #000000 20px,
+                    #1a3300 20px,
+                    #1a3300 40px,
+                    #004d00 40px,
+                    #004d00 60px
+                ),
+                radial-gradient(circle at 60% 40%, rgba(34, 197, 94, 0.4) 0%, transparent 60%);
+            color: #ffffff;
+        }
+
+        .character-card.shades {
+            background: 
+                linear-gradient(
+                    45deg,
+                    #000000 0%,
+                    #4c1d95 25%,
+                    #000000 50%,
+                    #7c3aed 75%,
+                    #000000 100%
+                ),
+                radial-gradient(circle at 30% 70%, rgba(124, 58, 237, 0.3) 0%, transparent 50%);
+            background-size: 40px 40px, 100% 100%;
+            animation: shadowMove 8s ease-in-out infinite;
+            color: #ffffff;
+        }
+
+        @keyframes planetRotate {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        @keyframes shadowMove {
+            0%, 100% { background-position: 0% 0%, 50% 50%; }
+            50% { background-position: 40px 40px, 30% 70%; }
+        }
+
+        .character-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .character-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            font-style: italic;
+            transition: all 0.5s ease;
+        }
+
+        .character-name {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .character-card.rheon .character-name {
+            color: #ff6b6b;
+        }
+
+        .character-card.rekah .character-name {
+            color: #10b981;
+        }
+
+        .character-card.captain .character-name {
+            color: #60a5fa;
+        }
+
+        .character-card.trees .character-name {
+            color: #22c55e;
+        }
+
+        .character-card.shades .character-name {
+            color: #a855f7;
+        }
+
+        .character-desc {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+        }
+
+        .character-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            backdrop-filter: blur(10px);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .status-open {
+            background: rgba(0, 0, 0, 0.8);
+            color: #10b981;
+            border: 2px solid #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .directory-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .copyright-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* SHOP STYLES */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.8), rgba(153, 27, 27, 0.9));
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .header {
+            position: relative;
+            padding: 6rem 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.9) 0%, rgba(30, 30, 30, 0.7) 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .server-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.4), rgba(168, 85, 247, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .security-notice {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(153, 27, 27, 0.3));
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            margin: 3rem auto;
+            max-width: 800px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .security-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #fca5a5;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .security-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .navigation {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 2rem 3rem;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(30px) saturate(1.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-nav {
+            display: flex;
+            background: rgba(25, 25, 25, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-btn:hover {
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+            position: relative;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .item-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.4), rgba(20, 20, 20, 0.6));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px) saturate(1.2);
+        }
+
+        .item-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .item-layout {
+            display: flex;
+            min-height: 280px;
+        }
+
+        .item-image-container {
+            width: 240px;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        .item-details {
+            flex: 1;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-stats {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+        }
+
+        .contact-button {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            align-self: flex-start;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.8));
+            text-align: center;
+            padding: 4rem 3rem;
+            margin-top: 6rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .character-grid {
+                grid-template-columns: 1fr;
+            }
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            .item-layout {
+                flex-direction: column;
+            }
+            .item-image-container {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-background"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- DIRECTORY PAGE -->
+    <div class="page active" id="directoryPage">
+        <div class="directory-container">
+            <h1 class="main-title">Fantasy Pawn Shop Network</h1>
+            <p class="subtitle">Virtual Item Marketplace</p>
+            
+            <div class="character-grid">
+                <div class="character-card rheon" onclick="goToShop('rheon')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Rheon</h2>
+                    <p class="character-desc">
+                        Master weaponsmith and proprietor of premium armaments. Specializes in high-end magical weapons and rare artifacts.
+                    </p>
+                    <span class="character-status status-open">● OPEN FOR BUSINESS</span>
+                </div>
+                
+                <div class="character-card rekah" onclick="goToShop('rekah')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Rekah</h2>
+                    <p class="character-desc">
+                        Armor specialist and defensive equipment expert. Known for the finest protection gear in all realms.
+                    </p>
+                    <span class="character-status status-open">● OPEN FOR BUSINESS</span>
+                </div>
+                
+                <div class="character-card captain" onclick="goToShop('captainplanet')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Captain Planet</h2>
+                    <p class="character-desc">
+                        Elemental weapons dealer and environmental gear trader. By your powers combined, he is Captain Planet!
+                    </p>
+                    <span class="character-status status-open">● OPEN FOR BUSINESS</span>
+                </div>
+                
+                <div class="character-card trees" onclick="goToShop('trees')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Trees</h2>
+                    <p class="character-desc">
+                        Nature's merchant dealing in organic materials, wooden weapons, and druidic accessories.
+                    </p>
+                    <span class="character-status status-open">● OPEN FOR BUSINESS</span>
+                </div>
+                
+                <div class="character-card shades" onclick="goToShop('shades')">
+                    <div class="character-image">
+                        Portrait<br>Coming Soon
+                    </div>
+                    <h2 class="character-name">Shades</h2>
+                    <p class="character-desc">
+                        Shadow broker dealing in rare items, mysterious artifacts, and things that go bump in the night.
+                    </p>
+                    <span class="character-status status-open">● OPEN FOR BUSINESS</span>
+                </div>
+            </div>
+            
+            <div class="directory-footer">
+                <p class="footer-text">⚠️ ⚠️ For Educational Purposes Only ⚠️ ⚠️</p>
+                <p class="copyright-text">Designed by Vordak 2025 | For Educational Purposes Only</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete item database
+        const itemDatabase = {
+            rheon: {
+                weapons: [
+                    {
+                        name: "Steel Flamberge",
+                        stats: "Price: 12,840p | 54-65 slashing | 400 Heavy Weapons<br>Armor Cleaving, Resistance Cleaving | Fast speed (25) | WM 9.8<br><br>☆ Premium two-handed blade<br>☆ Exceptional cutting power<br>☆ Fast attack speed for heavy weapon"
+                    },
+                    {
+                        name: "Granite Tetsubo",
+                        stats: "Price: 11,650p | 61-63 bludgeoning | 370 Heavy Weapons<br>Crushing Blow, Biting Strike | Slow speed (50) | WM 9.5<br><br>☆ Devastating blunt weapon<br>☆ High damage potential<br>☆ Critical strike capabilities"
+                    },
+                    {
+                        name: "Composite Atlatl with Exquisite Handle",
+                        stats: "Price: 9,420p | 30.6-34 piercing | 360 Missile<br>Atlatl Mastery, Armor Piercing | 83m/s velocity<br><br>☆ Superior ranged weapon<br>☆ Armor penetration<br>☆ High velocity projectiles"
+                    },
+                    {
+                        name: "Steel Arbalest",
+                        stats: "Price: 8,750p | 28.8-32 piercing | 335 Missile<br>Armor Piercing, Devastating Attack | 78m/s velocity<br><br>☆ Heavy crossbow<br>☆ Devastating critical hits<br>☆ Armor piercing capability"
+                    },
+                    {
+                        name: "Caulnalain Soul Crystal Orb",
+                        stats: "Price: 15,200p | 355 War Magic | Epic War Magic Aptitude<br>+12% elemental damage vs monsters | Bonded, Attuned<br><br>☆ Epic magical focus<br>☆ Elemental damage bonus<br>☆ War magic specialization"
+                    },
+                    {
+                        name: "Shagraka",
+                        stats: "Price: 13,900p | 330 War Magic | Multi-Strike, Crushing Blow<br>Major War Magic Aptitude | Ancient Gharu'ndim staff<br><br>☆ Legendary war staff<br>☆ Multi-strike capability<br>☆ Ancient artifact"
+                    }
+                ],
+                armor: [
+                    {
+                        name: "Major Shadow Helm",
+                        stats: "AL 520, Epic stats | Knorr Academy Helm (AL 480, steel)<br><br>☆ Premium head protection<br>☆ Enhanced stats<br>☆ Superior craftsmanship"
+                    },
+                    {
+                        name: "Empowered Perfect Light Breastplate",
+                        stats: "AL 600+500 | Olthoi Breastplate (AL 485, chitin)<br><br>☆ Exceptional chest armor<br>☆ Empowered enhancement<br>☆ Maximum protection"
+                    },
+                    {
+                        name: "Prismatic Shadow Tassets",
+                        stats: "AL 510, all elements | Haebrean Greaves (AL 465, dark steel)<br><br>☆ All elemental protection<br>☆ Shadow enhancement<br>☆ Superior leg armor"
+                    },
+                    {
+                        name: "Diforsa Bracers",
+                        stats: "AL 445, Viamontian | Fine Olthoi Pauldrons (AL 475, chitin)<br><br>☆ Viamontian craftsmanship<br>☆ Flexible arm protection<br>☆ Combat mobility"
+                    },
+                    {
+                        name: "Major Shadow Sollerets",
+                        stats: "AL 525, fire resistance | Platemail Sollerets (AL 420, steel)<br><br>☆ Enhanced foot protection<br>☆ Fire resistance<br>☆ Shadow enhancement"
+                    },
+                    {
+                        name: "Steel Tower Shield",
+                        stats: "AL 385, +18% missile defense | Covenant Shield (AL 495, Epic bonuses)<br><br>☆ Tower shield defense<br>☆ Missile protection<br>☆ Steel construction"
+                    }
+                ],
+                salvage: [
+                    {
+                        name: "Steel Salvage (WM 9)",
+                        stats: "Price: 15,000p | +AL enhancement | Armor tinkering<br><br>☆ Premium salvage material<br>☆ Armor enhancement<br>☆ High workmanship"
+                    },
+                    {
+                        name: "Iron Salvage (WM 8)",
+                        stats: "Price: 12,500p | +Attack modifier | Weapon tinkering<br><br>☆ Weapon enhancement<br>☆ Attack bonus<br>☆ Reliable material"
+                    },
+                    {
+                        name: "Granite Salvage (WM 9)",
+                        stats: "Price: 18,500p | +Damage, Armor Cleaving | Premium material<br><br>☆
